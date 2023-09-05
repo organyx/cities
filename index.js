@@ -14,7 +14,7 @@ const server = `${protocol}://${host}:${port}`;
   // oh, authentication is required
   assert.strictEqual(result.status, 401);
   result = await fetch(`${server}/cities-by-tag?tag=excepteurus&isActive=true`, {
-    headers: { 'Authorization': 'bearer dGhlc2VjcmV0dG9rZW4=' }
+    headers: { Authorization: 'bearer dGhlc2VjcmV0dG9rZW4=' }
   });
 
   // ah, that's better
@@ -26,13 +26,13 @@ const server = `${protocol}://${host}:${port}`;
 
   // let's just make sure it's the right one
   const city = body.cities[0];
-  assert.strictEqual(city.guid, 'ed354fef-31d3-44a9-b92f-4a3bd7eb0408')
+  assert.strictEqual(city.guid, 'ed354fef-31d3-44a9-b92f-4a3bd7eb0408');
   assert.strictEqual(city.latitude, -1.409358);
   assert.strictEqual(city.longitude, -37.257104);
 
   // find the distance between two cities
   result = await fetch(`${server}/distance?from=${city.guid}&to=17f4ceee-8270-4119-87c0-9c1ef946695e`, {
-    headers: { 'Authorization': 'bearer dGhlc2VjcmV0dG9rZW4=' }
+    headers: { Authorization: 'bearer dGhlc2VjcmV0dG9rZW4=' }
   });
 
   // we found it
@@ -49,7 +49,7 @@ const server = `${protocol}://${host}:${port}`;
   // the one we found earlier. That might take a while, so rather than waiting for the
   // result we expect to get a url that can be polled for the final result
   result = await fetch(`${server}/area?from=${city.guid}&distance=250`, {
-    headers: { 'Authorization': 'bearer dGhlc2VjcmV0dG9rZW4=' },
+    headers: { Authorization: 'bearer dGhlc2VjcmV0dG9rZW4=' },
     timeout: 25
   });
 
@@ -60,10 +60,9 @@ const server = `${protocol}://${host}:${port}`;
   assert.strictEqual(body.resultsUrl, `${server}/area-result/2152f96f-50c7-4d76-9e18-f7033bd14428`);
 
   let status;
-  do
-  {
+  do {
     result = await fetch(body.resultsUrl, {
-      headers: { 'Authorization': 'bearer dGhlc2VjcmV0dG9rZW4=' }
+      headers: { Authorization: 'bearer dGhlc2VjcmV0dG9rZW4=' }
     });
     status = result.status;
     // return 202 while the result is not yet ready, otherwise 200
@@ -73,13 +72,12 @@ const server = `${protocol}://${host}:${port}`;
     if (status === 202) {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-  }
-  while (status !== 200)
+  } while (status !== 200);
 
   // so we got a result. let's see if it looks as expected
   body = await result.json();
   let cities = body.cities;
-  assert.strictEqual(cities.length, 15);
+  assert.strictEqual(cities.length, 16);
 
   // and let's look at a sample
   const filteredByAddress = cities.filter(city => city.address === '859 Cyrus Avenue, Devon, Missouri, 1642');
@@ -89,7 +87,7 @@ const server = `${protocol}://${host}:${port}`;
   // for downloading all cites.
   // that's quite a bit of data, so make sure to support streaming
   result = await fetch(`${server}/all-cities`, {
-    headers: { 'Authorization': 'bearer dGhlc2VjcmV0dG9rZW4=' }
+    headers: { Authorization: 'bearer dGhlc2VjcmV0dG9rZW4=' }
   });
 
   if (await fs.exists('./all-cities.json')) {
