@@ -17,7 +17,6 @@
     "fs-extra": "7.0.0",
     "http-status-codes": "^2.2.0",
     "node-fetch": "^2.6.1",
-    "uuid": "^9.0.0",
     "zod": "^3.22.2"
   },
   "devDependencies": {
